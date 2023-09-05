@@ -140,23 +140,23 @@ def callGenerator(arg = None):
     point_count = 0
     point_list = []
     selected_points = []
-    
-    while selected_points.count() <= 15:
+
+    while len(selected_points) < 15:
         point = GeneratePoint(p1, p2)
+        point_list.append(point)
 
-        if point_list.index(point) != 1:
-            point_list.append(point)
-
-        if point_list.count() != 0:
-            for p in point_list:
-                if dist(p, point) > minDist:
-                    selected_points.append(point)
-                    point_count += 1
+        if dist(previousPoint, point) > minDist:
+            selected_points.append(point)
+            point_count += 1
+            previousPoint = point
 
     path = FindShortestPath(selected_points)
+    # print(path)
 
+    print("printing points...")
     for points in path:
         index += 1
+        # print(f"p{index} {points}")
         addPosition(routine, moveType, str(index), points[0], points[1], points[2], addMesCall)
 
     all_props = None

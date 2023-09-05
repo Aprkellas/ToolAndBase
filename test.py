@@ -20,10 +20,43 @@ def NearestNeighborTSP(listOfPoints):
         unvisited_points.remove(nearest_point)
 
     ordered_path.append(ordered_path[0])
-
+    print("Printing ordered path")
+    print(ordered_path) 
     return ordered_path
 
-test = [(100, 200, 300), (200, 500, 1231), (123123, 123123, 123), (12312, 1231, 312), (1213,123,2), (12313,7567,567), (5346,5,34)]
-shortestPath = NearestNeighborTSP(test)
+# test = [(100, 200, 300), (200, 500, 1231), (123123, 123123, 123), (12312, 1231, 312), (1213,123,2), (12313,7567,567), (5346,5,34)]
+# shortestPath = NearestNeighborTSP(test)
 
-print(shortestPath)
+# print(shortestPath)
+
+def funct(startX, startY, startZ, xTravel, yTravel, zTravel):
+
+    p1 = (startX, startY, startZ)
+    p2 = ((startX + xTravel), (startY + yTravel), (startZ + zTravel))
+
+    index = 0
+
+    point_count = 0
+    point_list = []
+    selected_points = []
+
+    # minDist = 50
+    # previousPoint = (0,0,0)
+    while len(selected_points) < 15:
+        point = GeneratePoint(p1, p2)
+        point_list.append(point)
+
+        if dist(previousPoint, point) > minDist:
+            selected_points.append(point)
+            point_count += 1
+            previousPoint = point
+
+    path = NearestNeighborTSP(selected_points)
+    # print(path)
+
+    print("printing points...")
+    for points in path:
+        index += 1
+        # print(f"p{index} {points}")
+
+funct(100,100,100,500,500,5000)

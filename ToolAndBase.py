@@ -135,17 +135,13 @@ def callGenerator(arg = None):
     p1 = (startX, startY, startZ)
     p2 = ((startX + xTravel), (startY + yTravel), (startZ + zTravel))
 
-    x = startX
-    y = startY
-    z = startZ
-
     index = 0
 
     point_count = 0
     point_list = []
     selected_points = []
     
-    while point_count <= 15:
+    while selected_points.count() <= 15:
         point = GeneratePoint(p1, p2)
 
         if point_list.index(point) != 1:
@@ -157,9 +153,9 @@ def callGenerator(arg = None):
                     selected_points.append(point)
                     point_count += 1
 
-    orderedPoints = FindShortestPath(selected_points)
+    path = FindShortestPath(selected_points)
 
-    for points in orderedPoints:
+    for points in path:
         index += 1
         addPosition(routine, moveType, str(index), points[0], points[1], points[2], addMesCall)
 
@@ -208,6 +204,19 @@ def GeneratePoint(start, end):
     point = (x, y, z)
     return point
 
+# Nearest Neighbor Algorithm
 def FindShortestPath(listOfPoints):
-    
+    current_point = listOfPoints[0]
+    ordered_path = [current_point]
+    unvisited_points = listOfPoints[1:]
+
+    while unvisited_points:
+        nearest_point = min(unvisited_points, key=lambda point: dist(current_point, point))
+        ordered_path.append(nearest_point)
+        current_point = nearest_point
+        unvisited_points.remove(nearest_point)
+
+    ordered_path.append(ordered_path[0])
+
+    return ordered_path
     return

@@ -204,7 +204,7 @@ def GeneratePoint(start, end):
     point = (x, y, z)
     return point
 
-# Nearest Neighbor Algorithm
+# Nearest Neighbour Algorithm
 def FindShortestPath(listOfPoints):
     current_point = listOfPoints[0]
     ordered_path = [current_point]

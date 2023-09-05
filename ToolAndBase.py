@@ -144,8 +144,6 @@ def callGenerator(arg = None):
     point_count = 0
     point_list = []
     selected_points = []
-
-
     
     while point_count <= 15:
         point = GeneratePoint(p1, p2)
@@ -162,6 +160,7 @@ def callGenerator(arg = None):
     orderedPoints = FindShortestPath(selected_points)
 
     for points in orderedPoints:
+        index += 1
         addPosition(routine, moveType, str(index), points[0], points[1], points[2], addMesCall)
 
     all_props = None
@@ -209,5 +208,6 @@ def GeneratePoint(start, end):
     point = (x, y, z)
     return point
 
-def FindShortestPath(Graph):
-    return 
+def FindShortestPath(listOfPoints):
+    
+    return

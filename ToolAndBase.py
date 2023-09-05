@@ -165,9 +165,9 @@ def callGenerator(arg = None):
 
 def addPosition(routine, moveType, name, x, y, z, addMesCall):
     speed = cmd.getProperty('Speed').Value
-    rx = random.randrange(-45, 45)
-    ry = random.randrange(-45, 45)
-    rz = random.randrange(-45, 45)
+    rx = 0 + random.randrange(-45, 45)
+    ry = 0 + random.randrange(-45, 45)
+    rz = 0 + random.randrange(-45, 45)
 
     m = vcMatrix.new()
     m.translateAbs(x, y, z)

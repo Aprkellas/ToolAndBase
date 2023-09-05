@@ -1,4 +1,4 @@
-# Grid Generator V0.1
+# Tool and Base Generator V0.1
 
 from vcCommand import *
 import vcMatrix, vcVector

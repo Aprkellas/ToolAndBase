@@ -146,13 +146,12 @@ def callGenerator(arg = None):
     
     while point_count <= 15:
         point = GeneratePoint(p1, p2)
-            
-        for p in point_list:
-            if dist(p, point) > minDist:
-                addPosition(routine, moveType, pName, str(index), point[0], point[1], point[2], addMesCall)
-                point_count += 1
-                if point_list.count() != 0:
-                    point_list.append(point)
+        point_list.append(point)
+        if point_list.count() != 0:
+            for p in point_list:
+                if dist(p, point) > minDist:
+                    addPosition(routine, moveType, pName, str(index), point[0], point[1], point[2], addMesCall)
+                    point_count += 1
 
     all_props = None
     app.render()

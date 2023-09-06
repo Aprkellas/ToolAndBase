@@ -222,4 +222,3 @@ def FindShortestPath(listOfPoints):
     ordered_path.append(ordered_path[0])
 
     return ordered_path
-    return

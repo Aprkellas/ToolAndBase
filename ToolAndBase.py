@@ -141,14 +141,17 @@ def callGenerator(arg = None):
     point_list = []
     selected_points = []
 
-    while len(selected_points) < 15:
+    while len(selected_points) <= 14:
         point = GeneratePoint(p1, p2)
         point_list.append(point)
 
-        if dist(previousPoint, point) > minDist:
-            selected_points.append(point)
-            point_count += 1
-            previousPoint = point
+        for p in point_list:
+            if dist(p, point) > minDist:
+                if point not in selected_points:
+                    selected_points.append(point)
+                    point_count += 1
+            else:
+                break
 
     path = FindShortestPath(selected_points)
     # print(path)

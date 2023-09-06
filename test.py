@@ -40,16 +40,24 @@ def funct(startX, startY, startZ, xTravel, yTravel, zTravel):
     point_list = []
     selected_points = []
 
-    # minDist = 50
-    # previousPoint = (0,0,0)
-    while len(selected_points) < 15:
+    minDist = 50
+    while len(selected_points) <= 14:
         point = GeneratePoint(p1, p2)
         point_list.append(point)
 
-        if dist(previousPoint, point) > minDist:
-            selected_points.append(point)
-            point_count += 1
-            previousPoint = point
+        for p in point_list:
+            if dist(p, point) > minDist:
+                if point not in selected_points:
+                    selected_points.append(point)
+                    point_count += 1
+
+            else:
+                break
+
+        # if dist(previousPoint, point) > minDist:
+        #     selected_points.append(point)
+        #     point_count += 1
+        #     previousPoint = point
 
     path = NearestNeighborTSP(selected_points)
     # print(path)
@@ -57,6 +65,6 @@ def funct(startX, startY, startZ, xTravel, yTravel, zTravel):
     print("printing points...")
     for points in path:
         index += 1
-        # print(f"p{index} {points}")
+        print(f"p{index} {points}")
 
 funct(100,100,100,500,500,5000)

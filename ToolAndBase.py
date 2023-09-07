@@ -3,7 +3,7 @@
 from vcCommand import *
 import vcMatrix, vcVector
 import random
-from math import dist
+import math
 
 app = getApplication()
 cmd = getCommand()  #
@@ -137,7 +137,6 @@ def callGenerator(arg = None):
 
     index = 0
 
-    point_count = 0
     point_list = []
     selected_points = []
 
@@ -145,13 +144,18 @@ def callGenerator(arg = None):
         point = GeneratePoint(p1, p2)
         point_list.append(point)
 
-        for p in point_list:
-            if dist(p, point) > minDist:
-                if point not in selected_points:
-                    selected_points.append(point)
-                    point_count += 1
-            else:
-                break
+        if checkPoint(point, point_list, minDist, 0):
+            selected_points.append(point)
+
+        # for p in point_list:
+        #     # checks if distance is 
+        #     if distance(p, point) > minDist:
+        #         if point not in selected_points:
+        #             print "distance: ", distance(p, point)
+        #             selected_points.append(point)
+        #             point_count += 1
+        #     else:
+        #         break
 
     path = FindShortestPath(selected_points)
     # print(path)
@@ -222,3 +226,16 @@ def FindShortestPath(listOfPoints):
     ordered_path.append(ordered_path[0])
 
     return ordered_path
+
+def distance(p1, p2):
+    return math.sqrt(sum((a - b) ** 2 for a, b in zip(p1, p2)))
+
+# checks if generated point meets the minDist requirement 
+def checkPoint(point, point_list, minDist, index):
+    if index > len(point_list):
+        return False
+    elif distance(point_list[index], point) > minDist: 
+        print "distance: ", distance(point_list[index], point)
+        return True
+    else:
+        checkPoint(point, point_list, minDist, (index + 1))

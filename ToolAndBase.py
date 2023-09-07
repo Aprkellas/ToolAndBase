@@ -1,13 +1,14 @@
 # Tool and Base Generator V0.1
 
+from warnings import catch_warnings
 from vcCommand import *
-import vcMatrix, vcVector
+import vcMatrix, vcVector, vcKinObject
 import random
 import math
 
 app = getApplication()
 cmd = getCommand()  #
-cmd.Name = "Tool & Base"
+cmd.Name = "ToolAndBase"
 
 def OnStart():
     global program
@@ -36,7 +37,7 @@ def createProperties():
     global all_props
     global genButton
 
-    createRestrainedProperty(VC_STRING, 'Flow', 'XYZ', ['XYZ', 'XZY', 'YXZ', 'YZX', 'ZYX', 'ZXY'])
+    # createRestrainedProperty(VC_STRING, 'Flow', 'XYZ', ['XYZ', 'XZY', 'YXZ', 'YZX', 'ZYX', 'ZXY'])
 
     createProperty(VC_REAL, 'Start X', None, None)
     createProperty(VC_REAL, 'Start Y', None, None)
@@ -52,7 +53,7 @@ def createProperties():
     # createProperty(VC_REAL, 'Ry', None, None)
     # createProperty(VC_REAL, 'Rz', None, None)
     createProperty(VC_REAL, 'Speed', None, None)
-    # createRestrainedProperty(VC_STRING, 'Move Type', 'Linear', ['Linear', 'Joint'])
+    createRestrainedProperty(VC_STRING, 'Move Type', 'Linear', ['Linear', 'Joint'])
     # createProperty(VC_STRING, 'Point Name', 'P', None)
 
     genButton = createProperty(VC_BUTTON, 'Generate', None, callGenerator)
@@ -108,9 +109,8 @@ def callGenerator(arg = None):
     routine = app.TeachContext.ActiveRoutine
     routine.clear()
 
-    flow = cmd.getProperty('Flow').Value
     moveType = cmd.getProperty('Move Type').Value
-    pName = cmd.getProperty('Point Name').Value
+
 
     addMesCall = False
 
@@ -148,7 +148,6 @@ def callGenerator(arg = None):
             selected_points.append(point)
 
         # for p in point_list:
-        #     # checks if distance is 
         #     if distance(p, point) > minDist:
         #         if point not in selected_points:
         #             print "distance: ", distance(p, point)
@@ -172,7 +171,7 @@ def callGenerator(arg = None):
 
 def addPosition(routine, moveType, name, x, y, z, addMesCall):
     speed = cmd.getProperty('Speed').Value
-    rx = 0 + random.randrange(-45, 45)
+    rx = 180 + random.randrange(-45, 45)
     ry = 0 + random.randrange(-45, 45)
     rz = 0 + random.randrange(-45, 45)
 
@@ -218,7 +217,7 @@ def FindShortestPath(listOfPoints):
     unvisited_points = listOfPoints[1:]
 
     while unvisited_points:
-        nearest_point = min(unvisited_points, key=lambda point: dist(current_point, point))
+        nearest_point = min(unvisited_points, key=lambda point: distance(current_point, point))
         ordered_path.append(nearest_point)
         current_point = nearest_point
         unvisited_points.remove(nearest_point)
@@ -228,14 +227,20 @@ def FindShortestPath(listOfPoints):
     return ordered_path
 
 def distance(p1, p2):
-    return math.sqrt(sum((a - b) ** 2 for a, b in zip(p1, p2)))
+    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) **2)
 
-# checks if generated point meets the minDist requirement 
 def checkPoint(point, point_list, minDist, index):
     if index > len(point_list):
         return False
-    elif distance(point_list[index], point) > minDist: 
-        print "distance: ", distance(point_list[index], point)
-        return True
-    else:
-        checkPoint(point, point_list, minDist, (index + 1))
+    try:
+        if distance(point_list[index], point) < minDist:
+            checkPoint(point, point_list, minDist, (index + 1))
+
+        # print "distance: ", distance(point_list[index], point)
+        else:
+            return True
+
+    except:
+        print "Index out of range"
+        return False
+    

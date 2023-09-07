@@ -2,12 +2,12 @@
 
 from warnings import catch_warnings
 from vcCommand import *
-import vcMatrix, vcVector, vcKinObject
+import vcMatrix, vcVector 
 import random
 import math
 
 app = getApplication()
-cmd = getCommand()  #
+cmd = getCommand()  
 cmd.Name = "ToolAndBase"
 
 def OnStart():
@@ -37,8 +37,6 @@ def createProperties():
     global all_props
     global genButton
 
-    # createRestrainedProperty(VC_STRING, 'Flow', 'XYZ', ['XYZ', 'XZY', 'YXZ', 'YZX', 'ZYX', 'ZXY'])
-
     createProperty(VC_REAL, 'Start X', None, None)
     createProperty(VC_REAL, 'Start Y', None, None)
     createProperty(VC_REAL, 'Start Z', None, None)
@@ -46,15 +44,10 @@ def createProperties():
     createProperty(VC_REAL, 'Y Travel', None, None)
     createProperty(VC_REAL, 'Z Travel', None, None)
     createProperty(VC_REAL, 'Min Distance', None, None)
-    # createProperty(VC_INTEGER, 'X Sections', None,  None)
-    # createProperty(VC_INTEGER, 'Y Sections', None, None)
-    # createProperty(VC_INTEGER, 'Z Sections', None, None)
-    # createProperty(VC_REAL, 'Rx', None, None)
-    # createProperty(VC_REAL, 'Ry', None, None)
-    # createProperty(VC_REAL, 'Rz', None, None)
+
+
     createProperty(VC_REAL, 'Speed', None, None)
     createRestrainedProperty(VC_STRING, 'Move Type', 'Linear', ['Linear', 'Joint'])
-    # createProperty(VC_STRING, 'Point Name', 'P', None)
 
     genButton = createProperty(VC_BUTTON, 'Generate', None, callGenerator)
 
@@ -124,14 +117,6 @@ def callGenerator(arg = None):
 
     minDist = cmd.getProperty('Min Distance').Value
 
-    # xSections = cmd.getProperty('X Sections').Value
-    # ySections = cmd.getProperty('Y Sections').Value
-    # zSections = cmd.getProperty('Z Sections').Value
-
-    # xStep = xTravel / xSections
-    # yStep = yTravel / ySections
-    # zStep = zTravel / zSections
-
     p1 = (startX, startY, startZ)
     p2 = ((startX + xTravel), (startY + yTravel), (startZ + zTravel))
 
@@ -144,25 +129,14 @@ def callGenerator(arg = None):
         point = GeneratePoint(p1, p2)
         point_list.append(point)
 
-        if checkPoint(point, point_list, minDist, 0):
-            selected_points.append(point)
-
-        # for p in point_list:
-        #     if distance(p, point) > minDist:
-        #         if point not in selected_points:
-        #             print "distance: ", distance(p, point)
-        #             selected_points.append(point)
-        #             point_count += 1
-        #     else:
-        #         break
+        if checkPoint(point, point_list, minDist):
+            selected_points.append(point)          
 
     path = FindShortestPath(selected_points)
-    # print(path)
 
     print("printing points...")
     for points in path:
         index += 1
-        # print(f"p{index} {points}")
         addPosition(routine, moveType, str(index), points[0], points[1], points[2], addMesCall)
 
     all_props = None
@@ -210,7 +184,6 @@ def GeneratePoint(start, end):
     point = (x, y, z)
     return point
 
-# Nearest Neighbour Algorithm
 def FindShortestPath(listOfPoints):
     current_point = listOfPoints[0]
     ordered_path = [current_point]
@@ -227,20 +200,17 @@ def FindShortestPath(listOfPoints):
     return ordered_path
 
 def distance(p1, p2):
-    return math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) **2)
+    return math.sqrt(((p2[0] - p1[0]) ** 2) + ((p2[1] - p1[1]) **2))
 
-def checkPoint(point, point_list, minDist, index):
-    if index > len(point_list):
-        return False
-    try:
-        if distance(point_list[index], point) < minDist:
-            checkPoint(point, point_list, minDist, (index + 1))
-
-        # print "distance: ", distance(point_list[index], point)
-        else:
-            return True
-
-    except:
-        print "Index out of range"
+def checkPoint(point, point_list, minDist):
+    should_add = False
+    
+    for p in point_list:
+        if distance(p, point) > minDist:
+            # print "distance: ", distance(p, point)
+            should_add = True
+    if should_add:
+        return True
+    else:
         return False
     
